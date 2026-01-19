@@ -9,6 +9,7 @@ import pytest
 import os
 from pathlib import Path
 from playwright.sync_api import Page, BrowserContext
+import allure
 from utils.config import ConfigManager
 from utils.logger import get_logger
 
@@ -27,6 +28,9 @@ def browser_context_args(browser_context_args):
     return {
         **browser_context_args,
         "ignore_https_errors": True,
+        # 与 PageAnalyzer 保持一致：固定 UA/locale，避免 i18n 文案/渲染分支不一致导致断言不稳定
+        "user_agent": browser_config.get("user_agent") or browser_context_args.get("user_agent"),
+        "locale": browser_config.get("locale") or browser_context_args.get("locale"),
         "viewport": {
             "width": browser_config.get("viewport_width", 1920),
             "height": browser_config.get("viewport_height", 1080)
@@ -162,6 +166,39 @@ def logged_in_page(page: Page, test_account) -> Page:
 
 
 # ═══════════════════════════════════════════════════════════════
+# COMPAT FIXTURES (GENERATED SUITES)
+# ═══════════════════════════════════════════════════════════════
+#
+# 说明：
+# - 新版生成器/规则文件会建议使用 `auth_page` / `unauth_page`。
+# - 但本仓库历史上存在 `logged_in_page` 等命名差异，导致生成用例在部分环境中找不到 fixture。
+# - 这里提供兼容层，保证“现有测试用例能跑通”。
+#
+# 安全约束：
+# - 这里不落盘、不硬编码任何密码/凭证。
+# - 若后续需要真正的登录态，应实现专用 LoginPage + storage_state 方案（再替换此兼容实现）。
+
+
+@pytest.fixture(scope="function")
+def unauth_page(page: Page) -> Page:
+    """未登录页面（兼容 fixture）"""
+    return page
+
+
+@pytest.fixture(scope="function")
+def auth_page(page: Page) -> Page:
+    """
+    已登录页面（兼容 fixture）。
+
+    当前默认返回 `page`，用于让 suite 至少可执行并暴露真实 UI/定位问题。
+    若目标页面确实需要登录态，请改用：
+    - `logged_in_page`（前提：实现并维护 `pages/login_page.py`）
+    - 或引入 storage_state（推荐）
+    """
+    return page
+
+
+# ═══════════════════════════════════════════════════════════════
 # SERVICE CHECK FIXTURES
 # ═══════════════════════════════════════════════════════════════
 
@@ -219,6 +256,39 @@ def setup_test_environment():
     logger.info("=" * 60)
     logger.info("🏁 测试执行完成")
     logger.info("=" * 60)
+
+
+# ═══════════════════════════════════════════════════════════════
+# ALLURE - AUTO SCREENSHOT
+# ═══════════════════════════════════════════════════════════════
+#
+# 说明：
+# - 用户希望 Allure 报告中每个用例都有截图。
+# - 仅依赖测试代码手动调用 take_screenshot() 往往会导致“全绿但没截图”的体验。
+# - 因此这里提供 function 级 autouse：每条用例结束都截一张并 attach 到 Allure。
+#
+# 控制开关：
+# - ALLURE_AUTO_SCREENSHOT=0 可关闭（默认开启）
+
+
+@pytest.fixture(scope="function", autouse=True)
+def allure_auto_screenshot(request, page: Page):
+    """每个用例结束自动截图并附加到 Allure。"""
+    yield
+
+    if os.getenv("ALLURE_AUTO_SCREENSHOT", "1").strip() == "0":
+        return
+
+    try:
+        screenshot_bytes = page.screenshot(full_page=True)
+        name = request.node.nodeid.replace("/", "_").replace("::", "_")
+        allure.attach(
+            screenshot_bytes,
+            name=f"{name}_final",
+            attachment_type=allure.attachment_type.PNG,
+        )
+    except Exception as e:
+        logger.warning(f"Allure 自动截图失败（忽略，不影响用例结果）: {e}")
 
 
 # ═══════════════════════════════════════════════════════════════

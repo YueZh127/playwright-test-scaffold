@@ -10,11 +10,17 @@
     pytest tests/test_example.py -v -m P0
 """
 
+import os
 import pytest
 import allure
 from playwright.sync_api import Page
 from pages.example_page import ExamplePage
 from utils.logger import TestLogger
+
+# 示例用例用于展示框架写法，不保证对齐真实业务站点。
+# 如需运行示例用例，请显式设置环境变量：RUN_EXAMPLE_TESTS=1
+if os.getenv("RUN_EXAMPLE_TESTS") != "1":
+    pytest.skip("Skip scaffold example tests (set RUN_EXAMPLE_TESTS=1 to enable).", allow_module_level=True)
 
 logger = TestLogger("test_example")
 

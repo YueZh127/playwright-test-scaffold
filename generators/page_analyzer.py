@@ -114,10 +114,21 @@ class PageAnalyzer:
         with sync_playwright() as p:
             browser = p.chromium.launch(headless=headless)
 
+            # 从配置读取浏览器参数（避免硬编码导致页面渲染分支不同）
+            viewport_cfg = self.config.get("browser.viewport", {}) or {}
+            vw = int(viewport_cfg.get("width", 1920) or 1920)
+            vh = int(viewport_cfg.get("height", 1080) or 1080)
+            user_agent = (self.config.get("browser.user_agent", "") or "").strip()
+            locale = (self.config.get("browser.locale", "") or "").strip()
+
             context_kwargs: Dict = {
-                "viewport": {"width": 1920, "height": 1080},
+                "viewport": {"width": vw, "height": vh},
                 "ignore_https_errors": True,
             }
+            if user_agent:
+                context_kwargs["user_agent"] = user_agent
+            if locale:
+                context_kwargs["locale"] = locale
             if storage_state_path:
                 sp = Path(storage_state_path)
                 if sp.exists() and sp.stat().st_size > 0:
@@ -244,7 +255,11 @@ class PageAnalyzer:
         Returns:
             PageInfo: 页面信息
         """
-        title = page.title()
+        # 某些页面在 networkidle 后仍可能继续跳转/重建执行上下文；title() 需要容错
+        try:
+            title = page.title()
+        except Exception:
+            title = ""
         
         # 识别页面类型
         page_type = self._detect_page_type(page, url)

@@ -1,176 +1,20 @@
 {
   "test_account_pool": [
     {
-      "username": "qatest__021",
-      "email": "qatest__021@testmail.com",
-      "password": "TestPass123!",
+      "username": "testaaaa",
+      "email": "testaaaa@drmail.in",
+      "password": "Aelf1234567!",
       "in_use": false,
-      "last_used": "2025-12-05T14:10:58.150889",
-      "is_locked": true,
-      "locked_reason": "密码被污染，无法登录"
+      "is_locked": false,
+      "description": "GodGPT UI Testnet 测试账号"
     },
     {
-      "username": "qatest__022",
-      "email": "qatest__022@testmail.com",
-      "password": "TestPass123!",
+      "username": "automationtest",
+      "email": "automationtest3@drmail.in",
+      "password": "Aelf1234567!",
       "in_use": false,
-      "last_used": "2025-12-05T14:14:00.133294",
-      "is_locked": true,
-      "locked_reason": "密码被污染，无法登录"
-    },
-    {
-      "username": "qatest__023",
-      "email": "qatest__023@testmail.com",
-      "password": "TestPass123!",
-      "in_use": false,
-      "last_used": "2025-12-05T14:00:05.358962",
-      "is_locked": true,
-      "locked_reason": "密码被污染，无法登录"
-    },
-    {
-      "username": "qatest__024",
-      "email": "qatest__024@testmail.com",
-      "password": "TestPass123!",
-      "in_use": false,
-      "last_used": "2025-12-05T15:45:59.288836",
-      "is_locked": true,
-      "locked_reason": "密码被污染，无法登录"
-    },
-    {
-      "username": "qatest__025",
-      "email": "qatest__025@testmail.com",
-      "password": "TestPass123!",
-      "in_use": false,
-      "last_used": "2025-12-05T15:49:54.919213",
-      "is_locked": true,
-      "locked_reason": "密码被污染，无法登录"
-    },
-    {
-      "username": "qatest__026",
-      "email": "qatest__026@testmail.com",
-      "password": "TestPass123!",
-      "in_use": false,
-      "last_used": "2025-12-05T15:53:36.703103",
-      "is_locked": true,
-      "locked_reason": "密码被污染，无法登录"
-    },
-    {
-      "username": "qatest__027",
-      "email": "qatest__027@testmail.com",
-      "password": "TestPass123!",
-      "in_use": false,
-      "last_used": "2025-12-05T16:15:33.762907",
-      "is_locked": true,
-      "locked_reason": "密码被污染，无法登录"
-    },
-    {
-      "username": "qatest__028",
-      "email": "qatest__028@testmail.com",
-      "password": "TestPass123!",
-      "in_use": false,
-      "last_used": "2025-12-08T14:32:17.975782",
-      "is_locked": true,
-      "locked_reason": "密码被污染，无法登录"
-    },
-    {
-      "username": "qatest__029",
-      "email": "qatest__029@testmail.com",
-      "password": "TestPass123!",
-      "in_use": false,
-      "last_used": "2025-12-08T14:38:08.424647",
-      "is_locked": true,
-      "locked_reason": "密码被污染，无法登录"
-    },
-    {
-      "username": "qatest__030",
-      "email": "qatest__030@testmail.com",
-      "password": "TestPass123!",
-      "in_use": true,
-      "last_used": "2025-12-08T14:38:42.534125",
-      "is_locked": false
-    },
-    {
-      "username": "qatest__031",
-      "email": "qatest__031@testmail.com",
-      "password": "TestPass123!",
-      "in_use": true,
-      "last_used": "2025-12-05T14:00:49.237561",
-      "is_locked": false
-    },
-    {
-      "username": "qatest__032",
-      "email": "qatest__032@testmail.com",
-      "password": "TestPass123!",
-      "in_use": false,
-      "last_used": "2025-12-05T14:01:15.128409",
-      "is_locked": true,
-      "locked_reason": "密码被污染，无法登录"
-    },
-    {
-      "username": "qatest__033",
-      "email": "qatest__033@testmail.com",
-      "password": "TestPass123!",
-      "in_use": true,
-      "last_used": "2025-12-05T14:01:49.980758",
-      "is_locked": false
-    },
-    {
-      "username": "qatest__034",
-      "email": "qatest__034@testmail.com",
-      "password": "TestPass123!",
-      "in_use": true,
-      "last_used": "2025-12-05T14:04:07.120446",
-      "is_locked": false
-    },
-    {
-      "username": "qatest__035",
-      "email": "qatest__035@testmail.com",
-      "password": "TestPass123!",
-      "in_use": false,
-      "last_used": "2025-12-05T14:04:07.221074",
-      "is_locked": true,
-      "locked_reason": "密码被污染，无法登录"
-    },
-    {
-      "username": "qatest__036",
-      "email": "qatest__036@testmail.com",
-      "password": "TestPass123!",
-      "in_use": true,
-      "last_used": "2025-12-05T14:04:25.046721",
-      "is_locked": false
-    },
-    {
-      "username": "qatest__037",
-      "email": "qatest__037@testmail.com",
-      "password": "TestPass123!",
-      "in_use": true,
-      "last_used": "2025-12-05T14:04:44.817794",
-      "is_locked": false
-    },
-    {
-      "username": "qatest__038",
-      "email": "qatest__038@testmail.com",
-      "password": "TestPass123!",
-      "in_use": false,
-      "last_used": "2025-12-05T14:04:47.182053",
-      "is_locked": true,
-      "locked_reason": "密码被污染，无法登录"
-    },
-    {
-      "username": "qatest__039",
-      "email": "qatest__039@testmail.com",
-      "password": "TestPass123!",
-      "in_use": true,
-      "last_used": "2025-12-05T14:05:01.232237",
-      "is_locked": false
-    },
-    {
-      "username": "qatest__040",
-      "email": "qatest__040@testmail.com",
-      "password": "TestPass123!",
-      "in_use": true,
-      "last_used": "2025-12-05T14:05:19.664703",
-      "is_locked": false
+      "is_locked": false,
+      "description": "GodGPT 0 credits测试账户"
     }
   ],
   "pool_config": {

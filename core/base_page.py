@@ -6,7 +6,7 @@ BasePage - 所有页面对象的抽象基类
 提供统一的页面操作接口，子类只需关注业务逻辑
 """
 
-from playwright.sync_api import Page, Locator, expect
+from playwright.sync_api import Page, Locator, expect, TimeoutError as PlaywrightTimeoutError
 from abc import ABC, abstractmethod
 from typing import Optional, List, Dict, Any
 from core.page_utils import PageUtils
@@ -87,8 +87,19 @@ class BasePage(ABC):
         """
         url = path if path.startswith("http") else f"{self.base_url}{path}"
         logger.info(f"导航到: {url}")
-        
-        self.page.goto(url)
+        # 外部站点偶发 load 事件迟迟不触发，默认 30s 容易超时；这里更稳地等待 domcontentloaded，
+        # 并使用更保守的 timeout（>=60s）。
+        try:
+            cfg_timeout = int(self.config.get("browser.timeout", 30000) or 30000)
+        except Exception:
+            cfg_timeout = 30000
+        timeout_ms = max(cfg_timeout, 60000)
+        try:
+            self.page.goto(url, wait_until="domcontentloaded", timeout=timeout_ms)
+        except PlaywrightTimeoutError:
+            # 某些 SPA/风控场景下 domcontentloaded 可能迟迟不触发；降级到更早的导航阶段再继续后续等待。
+            logger.warning(f"goto domcontentloaded 超时，降级到 wait_until=commit 重试: {url}")
+            self.page.goto(url, wait_until="commit", timeout=timeout_ms)
         
         if wait_for_load:
             self.wait_for_page_load()

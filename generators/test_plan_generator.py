@@ -145,7 +145,14 @@ class TestPlanGenerator:
         输出：定位策略、定位器（优先 role/name，其次 css 兜底）
         """
         txt = (e.text or "").strip()
+        # 自定义按钮（div tabindex=0 + :has-text）用 role/name 往往拿不到；强制用 css
+        sel = (e.selector or "").strip()
+        if sel and ":has-text(" in sel:
+            return "css", f'page.locator("{sel}").first'
         if e.type == "button" and txt:
+            # 文本太长会导致 get_by_role(name=...) 不可用；此时仍用 css 更稳
+            if len(txt) > 40 and sel:
+                return "css", f'page.locator("{sel}").first'
             return "role/name", f'page.get_by_role("button", name="{txt}")'
         if e.type == "link" and txt:
             return "role/linkText", f'page.get_by_role("link", name="{txt}")'

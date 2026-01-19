@@ -7,6 +7,7 @@
 
 from playwright.sync_api import Page
 from typing import List, Optional, Dict
+import re
 from generators.page_types import PageElement
 from utils.logger import get_logger
 
@@ -43,7 +44,135 @@ class ElementExtractor:
         # 获取下拉框
         selects = self._get_selects(page)
         elements.extend(selects)
+
+        # 获取“可点击但不是 button/a”的元素（常见于 RN-Web / 自定义组件）
+        clickables = self._get_clickables(page)
+        # 去重：按 selector
+        existing = {e.selector for e in elements if getattr(e, "selector", None)}
+        for e in clickables:
+            if e and e.selector and e.selector not in existing:
+                elements.append(e)
+                existing.add(e.selector)
         
+        return elements
+
+    def _get_clickables(self, page: Page) -> List[PageElement]:
+        """
+        获取“可点击元素”：
+        - 很多页面的按钮不是 <button> 或 <a>，而是 <div tabindex=0> / cursor:pointer 的自定义组件
+        - 这里通过 DOM 特征抓取候选，并用 `:has-text()` 生成可定位 selector
+        """
+        elements: List[PageElement] = []
+
+        try:
+            candidates = page.evaluate(
+                """() => {
+  const isVisible = (el) => {
+    const r = el.getBoundingClientRect();
+    if (!r || r.width <= 1 || r.height <= 1) return false;
+    const s = window.getComputedStyle(el);
+    if (!s) return false;
+    if (s.visibility === 'hidden' || s.display === 'none' || Number(s.opacity || '1') === 0) return false;
+    return true;
+  };
+
+  const pickText = (el) => {
+    const t = (el.innerText || el.textContent || '').trim().replace(/\\s+/g, ' ');
+    if (!t) return '';
+    // 太长的不当成“按钮/链接”
+    if (t.length > 60) return '';
+    return t;
+  };
+
+  const out = [];
+  const all = Array.from(document.querySelectorAll('*'));
+  for (const el of all) {
+    if (out.length >= 80) break;
+    if (!isVisible(el)) continue;
+
+    const tag = (el.tagName || '').toLowerCase();
+    if (!tag || tag === 'html' || tag === 'body' || tag === 'script' || tag === 'style') continue;
+
+    const role = el.getAttribute('role') || '';
+    const tabindex = el.getAttribute('tabindex');
+    const onclick = el.getAttribute('onclick');
+    const aria = el.getAttribute('aria-label') || '';
+    const href = el.getAttribute('href') || '';
+    const cursor = (window.getComputedStyle(el).cursor || '');
+
+    const likelyClickable =
+      role === 'button' ||
+      role === 'link' ||
+      onclick != null ||
+      tabindex != null ||
+      cursor === 'pointer' ||
+      href; // 有 href 但可能不是 a（少见）
+
+    if (!likelyClickable) continue;
+
+    const text = pickText(el);
+    if (!text && !aria) continue;
+
+    out.push({
+      tag,
+      role,
+      tabindex: tabindex || '',
+      aria,
+      href,
+      text,
+      id: el.getAttribute('id') || '',
+      className: el.getAttribute('class') || '',
+    });
+  }
+  return out;
+}"""
+            )
+        except Exception:
+            candidates = []
+
+        # 生成 locator → PageElement
+        seen = set()
+        for c in candidates or []:
+            try:
+                tag = (c.get("tag") or "div").strip() or "div"
+                text = (c.get("text") or "").strip()
+                aria = (c.get("aria") or "").strip()
+                role = (c.get("role") or "").strip()
+                href = (c.get("href") or "").strip()
+                element_id = (c.get("id") or "").strip()
+
+                # selector 生成策略：id > href > role+text > aria > text
+                if element_id:
+                    sel = f"#{element_id}"
+                elif href and tag == "a":
+                    sel = f"a[href='{href}']"
+                elif role and text:
+                    sel = f"[role='{role}']:has-text('{text}')"
+                elif aria and tag:
+                    sel = f"{tag}[aria-label='{aria}']"
+                elif text:
+                    sel = f"{tag}:has-text('{text}')"
+                else:
+                    continue
+
+                # 去重：同 selector 不重复
+                if sel in seen:
+                    continue
+                seen.add(sel)
+
+                loc = page.locator(sel).first
+                # 这类元素按“button/link”语义归类：有 href 或 role=link -> link，否则 button
+                et = "link" if (href or role == "link") else "button"
+                pe = self._extract_element_info(loc, et)
+                if pe:
+                    # 使用我们计算的 selector（比 _build_selector 更贴合可点击语义）
+                    pe.selector = sel
+                    # 关键：避免 locator.text_content() 把整屏文本都塞进来，强制用候选短文本
+                    pe.text = text or aria or pe.text
+                    elements.append(pe)
+            except Exception:
+                continue
+
         return elements
     
     def _get_inputs(self, page: Page) -> List[PageElement]:
@@ -209,6 +338,15 @@ class ElementExtractor:
         # role 兜底：有些组件会用 role 标识
         if role:
             return f"[role='{_esc(role)}']"
+
+        # 文本兜底：对“自定义按钮/链接”非常有效（例如 div tabindex=0）
+        try:
+            txt = (locator.text_content() or "").strip()
+            txt = re.sub(r"\\s+", " ", txt)
+            if 0 < len(txt) <= 40:
+                return f"{tag}:has-text('{_esc(txt)}')"
+        except Exception:
+            pass
 
         # 最后才退化到 class（低质量/易漂移）
         if element_class:

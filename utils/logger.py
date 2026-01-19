@@ -65,6 +65,9 @@ class TestLogger:
         logger.step("点击登录按钮")
         logger.checkpoint("验证登录成功")
     """
+
+    # pytest 会收集所有 `Test*` 命名的类作为测试类；这里显式声明不参与收集，避免 PytestCollectionWarning
+    __test__ = False
     
     def __init__(self, test_name: str):
         """
