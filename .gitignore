@@ -60,3 +60,6 @@ tmp/
 temp/
 *.tmp
 
+
+# Local-only account pool override (do NOT commit)
+test-data/test_acount_pool.local.json
