@@ -16,10 +16,14 @@ project:
 # ─────────────────────────────────────────────────────────────────
 repositories:
   frontend:
+    local_path: "/Users/zy/github/godgpt/custom-gpt-frontend"                       # 前端代码本地路径（绝对路径或相对路径）
+                                        # 示例: "/Users/zy/Code/godgpt-ui" 或 "../godgpt-ui"
     url: ""                              # 如: https://github.com/owner/frontend
     branch: "main"
     description: "前端项目"
   backend:
+    local_path: "/Users/zy/github/godgpt/godgpt-api"                       # 后端代码本地路径（绝对路径或相对路径）
+                                       # 示例: "/Users/zy/Code/godgpt-backend" 或 "../godgpt-backend"
     url: ""                              # 如: https://github.com/owner/backend
     branch: "main"
     description: "后端 API 服务"
@@ -32,11 +36,20 @@ environments:
   
   dev:
     frontend:
-      url: "https://localhost:3000"
+      url: "https://godgpt-ui-testnet.aelf.dev"
       health_check: "/"                  # 健康检查路径
     backend:
-      url: "https://localhost:44320"
+      url: "https://godgpt-ui-testnet.aelf.dev"
       health_check: "/api/health"
+
+  # ─────────────────────────────────────────────────────────────────
+  # Aevatar - Management Test 环境（仅前端已知；后端暂不配置以免健康检查失败）
+  # 使用方式：TEST_ENV=aevatar_test
+  # ─────────────────────────────────────────────────────────────────
+  aevatar_test:
+    frontend:
+      url: "https://management-test.aevatar.ai/"
+      health_check: "/"
   
   staging:
     frontend:
@@ -86,6 +99,8 @@ health_check:
 # ─────────────────────────────────────────────────────────────────
 browser:
   headless: true                         # 无头模式
+  user_agent: "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36"
+  locale: "en-US"
   slow_mo: 0                             # 操作延迟（毫秒）
   timeout: 30000                         # 默认超时（毫秒）
   viewport:

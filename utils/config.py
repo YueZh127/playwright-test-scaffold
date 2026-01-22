@@ -248,10 +248,30 @@ class ConfigManager:
     
     def get_test_account(self, account_type: str = "default") -> Dict[str, str]:
         """获取测试账号（兼容旧接口）"""
+        # 支持固定账号选择（不把密码写入任何代码/文件；仅选择账号池中的记录）
+        preferred_username = (os.getenv("TEST_ACCOUNT_USERNAME") or "").strip()
+        preferred_email = (os.getenv("TEST_ACCOUNT_EMAIL") or "").strip()
+        # 环境级默认：Aevatar 管理台测试环境优先使用 developer 账号（避免随机拿到不可登录账号）
+        if not preferred_username and not preferred_email:
+            try:
+                if self.get_environment() == "aevatar_test":
+                    preferred_username = "developer"
+            except Exception:
+                pass
+
         # 优先从账号池加载
         accounts_data = self.load_test_data("accounts")
         if accounts_data and "test_account_pool" in accounts_data:
             pool = accounts_data["test_account_pool"]
+            # 1) 若指定了 preferred username/email：优先命中该账号（且必须可用）
+            if preferred_username or preferred_email:
+                for account in pool:
+                    if account.get("is_locked", False) or account.get("in_use", False):
+                        continue
+                    if preferred_username and str(account.get("username", "")).strip() == preferred_username:
+                        return account
+                    if preferred_email and str(account.get("email", "")).strip() == preferred_email:
+                        return account
             # 返回第一个未锁定且未使用的账号
             for account in pool:
                 if not account.get("is_locked", False) and not account.get("in_use", False):

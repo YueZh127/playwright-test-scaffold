@@ -1,0 +1,33 @@
+{
+  "slug": "aevatar_management_test_login",
+  "url": "https://management-test.aevatar.ai/",
+  "title": "Welcome to Aevatar",
+  "captured_at": "",
+  "source": "placeholder",
+  "notes": [
+    "Replace this file with Cursor Playwright MCP exported metadata.",
+    "Do NOT include any password/token/cookie/storageState in any artifact file."
+  ],
+  "element_map": [
+    {
+      "name": "login_entry",
+      "preferred": [
+        { "by": "role", "role": "link_or_button", "name": "Login" }
+      ],
+      "fallback": [],
+      "tbd": true
+    },
+    {
+      "name": "language_switcher",
+      "preferred": [],
+      "fallback": [],
+      "tbd": true
+    }
+  ],
+  "evidence_files": [
+    "visible.html",
+    "visible.txt",
+    "metadata.json"
+  ]
+}
+

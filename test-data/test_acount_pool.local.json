@@ -1,0 +1,52 @@
+{
+    "test_account_pool": [
+      {
+        "username": "testaaaa",
+        "email": "testaaaa@drmail.in",
+        "password": "Aelf1234567!",
+        "in_use": false,
+        "is_locked": false,
+        "description": "GodGPT UI Testnet 测试账号"
+      },
+      {
+        "username": "testbbbb",
+        "email": "testbbbb@drmail.in",
+        "password": "Aelf1234567!",
+        "in_use": false,
+        "is_locked": false,
+        "description": "GodGPT UI Testnet 测试账号"
+      },
+      {
+        "username": "automationtest",
+        "email": "automationtest@drmail.in",
+        "password": "Aelf1234567!",
+        "in_use": false,
+        "is_locked": false,
+        "description": "GodGPT UI Testnet 测试账号"
+      },
+      {
+        "username": "automationtest2",
+        "email": "automationtest2@drmail.in",
+        "password": "Aelf1234567!",
+        "in_use": false,
+        "is_locked": false,
+        "description": "GodGPT 限流测试账户"
+      },
+      {
+        "username": "automationtest3",
+        "email": "automationtest3@drmail.in",
+        "password": "Aelf1234567!",
+        "in_use": false,
+        "is_locked": false,
+        "description": "GodGPT 0 credits测试账户"
+      }
+    ],
+    "pool_config": {
+      "pool_size": 20,
+      "auto_register_fallback": true,
+      "cleanup_after_test": false,
+      "account_prefix": "qatest__",
+      "account_lock_wait_time": 300,
+      "max_retry_on_lock": 3
+    }
+  }

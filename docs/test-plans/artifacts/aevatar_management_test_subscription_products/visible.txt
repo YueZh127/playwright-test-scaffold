@@ -1,0 +1,6 @@
+title: (placeholder)
+url: https://management-test.aevatar.ai/SubscriptionProducts
+source: placeholder (replace with MCP export)
+
+== Notes ==
+- unauth access shows login form (Login / Username or email address / Password / Remember me)

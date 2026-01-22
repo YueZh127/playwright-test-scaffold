@@ -1,0 +1,15 @@
+{
+  "valid": {
+    "username": "developer",
+    "password": "(from account pool at runtime)"
+  },
+  "invalid": {
+    "wrong_password": "wrong-password",
+    "empty_username": "",
+    "empty_password": ""
+  },
+  "notes": [
+    "Do NOT store real passwords in any file; password is provided by account pool fixture at runtime.",
+    "Base truth: ABP login page /Account/Login."
+  ]
+}

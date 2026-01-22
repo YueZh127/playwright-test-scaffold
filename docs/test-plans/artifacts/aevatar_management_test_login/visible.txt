@@ -1,0 +1,17 @@
+title: Welcome to Aevatar
+url: https://management-test.aevatar.ai/
+source: web-visible-snapshot (placeholder; please replace with MCP export)
+
+== Visible Text (partial) ==
+- Welcome to Aevatar
+- AI-Powered Intelligent Assistant Platform
+- Login
+- English / EN
+- 简体中文 / ZH
+- 繁體中文 / ZH
+- Español / ES
+
+== Controls Summary (TBD by MCP evidence) ==
+- language switcher: role/name TBD
+- login entry: role=link/button name="Login"
+

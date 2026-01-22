@@ -162,6 +162,28 @@ def logged_in_page(page: Page, test_account) -> Page:
 
 
 # ═══════════════════════════════════════════════════════════════
+# Step2 preferred fixtures (rule-compatible aliases)
+# ═══════════════════════════════════════════════════════════════
+
+@pytest.fixture(scope="function")
+def auth_page(logged_in_page: Page) -> Page:
+    """规则推荐：已登录页面（与生成器一致命名）"""
+    return logged_in_page
+
+
+@pytest.fixture(scope="function")
+def unauth_page(browser) -> Page:
+    """未登录页面：用于鉴权/跳转登录等 security 用例"""
+    context: BrowserContext = browser.new_context(
+        viewport={"width": 1920, "height": 1080},
+        ignore_https_errors=True,
+    )
+    page = context.new_page()
+    yield page
+    context.close()
+
+
+# ═══════════════════════════════════════════════════════════════
 # SERVICE CHECK FIXTURES
 # ═══════════════════════════════════════════════════════════════
 

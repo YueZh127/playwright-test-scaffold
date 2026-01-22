@@ -1,0 +1,23 @@
+{
+  "valid": {
+    "key_prefix": "qa_label_",
+    "key_example": "most_popular"
+  },
+  "invalid": {
+    "not_snake_case": "Bad-KEY",
+    "starts_with_number": "1abc",
+    "has_uppercase": "Abc",
+    "too_long_129": "a_plus_128"
+  },
+  "boundary": {
+    "max_len": 128,
+    "len_128_example": "a_plus_127",
+    "len_129_example": "a_plus_128"
+  },
+  "notes": [
+    "规则真理源：Aevatar.Web/Pages/SubscriptionLabels/CreateModal.cshtml.cs",
+    "Regex: ^[a-z][a-z0-9_]*$",
+    "不包含任何账号/密码/Token；账号由运行期账号池提供。"
+  ]
+}
+

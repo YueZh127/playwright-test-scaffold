@@ -85,7 +85,17 @@ class BasePage(ABC):
             path: 相对路径或完整URL
             wait_for_load: 是否等待页面加载完成
         """
-        url = path if path.startswith("http") else f"{self.base_url}{path}"
+        if path.startswith("http"):
+            url = path
+        else:
+            base = (self.base_url or "").rstrip("/")
+            p = (path or "").strip()
+            if not p:
+                url = base or ""
+            elif p.startswith("/"):
+                url = f"{base}{p}"
+            else:
+                url = f"{base}/{p}"
         logger.info(f"导航到: {url}")
         
         self.page.goto(url)
@@ -157,6 +167,18 @@ class BasePage(ABC):
             timeout: 超时时间(毫秒)
         """
         logger.debug(f"填写输入框: {selector} = {value}")
+        self.page.wait_for_selector(selector, state="visible", timeout=timeout)
+        self.page.fill(selector, value, timeout=timeout)
+
+    def secret_fill(self, selector: str, value: str, timeout: int = 10000) -> None:
+        """
+        填写敏感输入框（例如密码）。
+
+        重要：
+        - 禁止把敏感值写入日志/Allure/文件。
+        - 本方法只记录 selector，不记录 value。
+        """
+        logger.debug(f"填写敏感输入框: {selector} = ***")
         self.page.wait_for_selector(selector, state="visible", timeout=timeout)
         self.page.fill(selector, value, timeout=timeout)
     

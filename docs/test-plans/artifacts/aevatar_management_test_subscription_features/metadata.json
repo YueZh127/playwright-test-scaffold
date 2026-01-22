@@ -1,0 +1,13 @@
+{
+  "slug": "aevatar_management_test_subscription_features",
+  "url": "https://management-test.aevatar.ai/SubscriptionFeatures",
+  "title": "",
+  "captured_at": "",
+  "source": "placeholder",
+  "notes": [
+    "Replace with Cursor Playwright MCP exported metadata.",
+    "Do NOT include any password/token/cookie/storageState."
+  ],
+  "element_map": [],
+  "evidence_files": ["visible.html", "visible.txt", "metadata.json"]
+}
