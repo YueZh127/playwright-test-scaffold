@@ -54,6 +54,15 @@ environments:
       url: "https://api.example.com"
       health_check: "/api/health"
 
+  # ─────────────────────────────────────────────────────────────────
+  # GodGPT UI - Testnet 环境
+  # 使用方式：TEST_ENV=godgpt_ui_testnet
+  # ─────────────────────────────────────────────────────────────────
+  godgpt_ui_testnet:
+    frontend:
+      url: "https://godgpt-ui-testnet.aelf.dev"
+      health_check: "/"
+
 # ─────────────────────────────────────────────────────────────────
 # 测试数据配置（支持多种类型）
 # ─────────────────────────────────────────────────────────────────

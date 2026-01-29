@@ -1,0 +1,33 @@
+{
+  "slug": "godgpt_upgrade_subscription_strategy",
+  "url": "https://godgpt-ui-testnet.aelf.dev/upgrade",
+  "final_url": "https://godgpt-ui-testnet.aelf.dev/",
+  "title": "GodGPT",
+  "generated_at": "2026-01-22T23:44:40",
+  "evidence_files": [
+    "visible.html",
+    "visible.txt",
+    "page.png",
+    "metadata.json"
+  ],
+  "requires_auth": true,
+  "element_mapping_suggestions": [
+    {
+      "strategy": "role=heading",
+      "purpose": "page title"
+    },
+    {
+      "strategy": "text=/upgrade/i",
+      "purpose": "page identity (fallback)"
+    },
+    {
+      "strategy": "role=button",
+      "purpose": "plan CTA buttons (fallback)"
+    }
+  ],
+  "notes": {
+    "no_secrets": true,
+    "credentials_source": "Step2 should use account pool/ENV; Step1 plan must not store password",
+    "observation": "Direct navigation to /upgrade was redirected to / (login/entry screen shown)."
+  }
+}

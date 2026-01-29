@@ -1,0 +1,36 @@
+slug: upgrade_plan_subscription_strategy
+source: file:///Users/zy/Downloads/upgrade-plan.mhtml
+title: new-template
+generated_at: 2026-01-22T17:41:27
+
+PAGE OVERVIEW (from snapshot):
+- Upgrade your plan
+- Weekly
+- Monthly
+- Annual
+- $5 / week
+- $15 / month
+- $120 / year
+- Billed weekly
+- Billed monthly
+- Billed annually
+- Most Popular
+- Best Value
+- Try It
+- Get Started
+- Compare plans
+- cancel anytime
+- Rate limit applies
+- Save $60 / year
+- Lock in this price forever
+
+CORE CONTROLS (inferred from visible text):
+- Plan cards: Weekly / Monthly / Annual
+- CTA buttons/links: Try It / Get Started / Go Annual & Save
+- Link/section: Compare plans
+- Header: Get App (likely navigation)
+
+AUTH STATE: TBD (snapshot-only; cannot confirm login redirect without MCP/live run)
+
+VISIBLE TEXT SAMPLE (first 1200 chars):
+new-template Get App Upgrade your plan AI for your soul. Reads your aura, turns overthinking into clarity. Weekly Commitment-phobic users $5 / week Billed weekly Try It Try Premium for just $5 / week . Test all features, cancel anytime . Limited questions ��� Rate limit applies Advanced insights ��� Deeper analysis beyond free tier 24/7 access ��� Use anytime, anywhere Priority responses ��� Faster answer times All core features ��� Everything you need for spiritual clarity Email support ��� Get help when you need it Multi-device sync ��� Seamless experience across all devices Monthly Most Popular Regular users seeking premium features $15 / month Billed monthly Get Started 25% cheaper than weekly . Limited questions ��� Rate limit applies Advanced insights ��� Deeper analysis beyond free tier 24/7 access ��� Use anytime, anywhere Priority responses ��� Faster answer times All core features ��� Everything you need for spiritual clarity Email support ��� Get help when you need it Multi-device sync ��� Seamless experience across all devices Annual Best Value Committed users who want to save $120 / year Billed annually Go Annual &amp; Save Save $60 / year . Lock in this price forever.

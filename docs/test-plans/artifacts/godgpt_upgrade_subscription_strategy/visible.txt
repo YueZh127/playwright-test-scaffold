@@ -1,0 +1,10 @@
+slug: godgpt_upgrade_subscription_strategy
+url: https://godgpt-ui-testnet.aelf.dev/upgrade
+final_url: https://godgpt-ui-testnet.aelf.dev/
+title: GodGPT
+generated_at: 2026-01-22T23:44:40
+
+AUTH STATE: snapshot-only (no credentials used; password not stored)
+
+VISIBLE TEXT SAMPLE (first 1500 chars):
+GodGPT JavaScript is required to run this app. Please enable JavaScript and reload the page. 此应用需要启用JavaScript才能运行。请启用JavaScript并重新加载页面。 Reload Page 重新加载 Oh no! It looks like JavaScript is not enabled in your browser. 哎呀！看起来您的浏览器禁用了JavaScript。 Reload 重新加载 GodGPT Get App Skip GodGPT Continue with Apple Continue with Google OR Continue with Email By continuing, you agree to our Terms of Service and Privacy Policy . Contact Us

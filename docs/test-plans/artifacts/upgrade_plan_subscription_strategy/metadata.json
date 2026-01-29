@@ -1,0 +1,41 @@
+{
+  "slug": "upgrade_plan_subscription_strategy",
+  "url": "file:///Users/zy/Downloads/upgrade-plan.mhtml",
+  "title": "new-template",
+  "evidence_files": [
+    "visible.html",
+    "visible.txt",
+    "page.png",
+    "metadata.json"
+  ],
+  "element_mapping_suggestions": [
+    {
+      "strategy": "role=link[name=\"Get App\"]",
+      "purpose": "header nav"
+    },
+    {
+      "strategy": "role=heading[name*=\"Upgrade your plan\"]",
+      "purpose": "page title"
+    },
+    {
+      "strategy": "role=button[name=\"Try It\"]",
+      "purpose": "weekly CTA"
+    },
+    {
+      "strategy": "role=button[name=\"Get Started\"]",
+      "purpose": "monthly CTA"
+    },
+    {
+      "strategy": "role=button[name=\"Go Annual & Save\"]",
+      "purpose": "annual CTA"
+    },
+    {
+      "strategy": "text=Compare plans",
+      "purpose": "compare section jump"
+    }
+  ],
+  "notes": {
+    "screenshot": "page.png is placeholder (empty). Use MCP to capture real screenshot in Step1.",
+    "no_secrets": true
+  }
+}
