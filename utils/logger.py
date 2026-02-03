@@ -76,6 +76,10 @@ class TestLogger:
         self.logger = get_logger(test_name)
         self.test_name = test_name
         self.step_count = 0
+
+    # pytest 发现规则：以 Test* 命名且带 __init__ 的类会触发收集警告；
+    # 这里显式标记为“非测试类”，避免污染测试输出。
+    __test__ = False
     
     def info(self, message: str) -> None:
         """记录信息日志"""

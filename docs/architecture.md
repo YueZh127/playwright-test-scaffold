@@ -59,7 +59,11 @@ playwright-test-scaffold/
 │   └── *.py
 │
 ├── tests/                        # 测试用例层
-│   └── test_*.py
+│   ├── test_*.py
+│   └── ext/                      # 外部站点/集成类测试（按站点与页面分目录）
+│       ├── godgpt_ui_testnet_aelf_dev_login/
+│       ├── godgpt_ui_testnet_aelf_dev_home/
+│       └── godgpt_compare/       # 🆕 生产 vs 测试环境对比测试（同问题对比 AI 回复）
 │
 ├── test-data/                    # 测试数据
 │   └── test_account_pool.json    # 测试账号池
@@ -146,6 +150,7 @@ playwright-test-scaffold/
 
 | 日期 | 变更 |
 |------|------|
+| 2026-01-29 | 新增 `tests/ext/godgpt_compare/`：生产 vs 测试环境对比测试（双浏览器登录与回复差分产物） |
 | 2025-12-15 | 新增服务健康检查模块 |
 | 2025-12-15 | 扩展配置结构（仓库/多环境/测试数据） |
 | 2025-12-15 | 移除 CLI，改为纯 AI 对话驱动 |

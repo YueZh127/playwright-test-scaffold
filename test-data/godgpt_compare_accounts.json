@@ -1,0 +1,37 @@
+{
+  "meta": {
+    "name": "GodGPT 生产 vs 测试环境对比账号集",
+    "notes": "每个 account_set 表示一组 prod/testnet 登录凭证；用于并行跑对比用例。"
+  },
+  "account_sets": [
+    {
+      "id": "default",
+      "title": "默认账号",
+      "production": {
+        "base_url": "https://app.godgpt.fun",
+        "email": "testiiii@drmail.in",
+        "password": "Aelf1234567!"
+      },
+      "testnet": {
+        "base_url": "https://godgpt-ui-testnet.aelf.dev",
+        "email": "testweb1@drmail.in",
+        "password": "Aelf1234567!"
+      }
+    },
+    {
+      "id": "set_02",
+      "title": "新增账号",
+      "production": {
+        "base_url": "https://app.godgpt.fun",
+        "email": "testjjj@drmail.in",
+        "password": "Aelf1234567!"
+      },
+      "testnet": {
+        "base_url": "https://godgpt-ui-testnet.aelf.dev",
+        "email": "testweb6@drmail.in",
+        "password": "Aelf1234567!"
+      }
+    }
+  ]
+}
+

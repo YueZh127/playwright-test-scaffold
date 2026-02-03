@@ -71,6 +71,11 @@ test_data:
   accounts:
     path: "test-data/test_account_pool.json"
     description: "测试账号池"
+
+  # GodGPT 生产 vs 测试：对比问题集
+  compare_questions_zh_cn:
+    path: "test-data/godgpt_compare_questions_zh_cn.json"
+    description: "对比测试问题集（简体中文）"
   
   # 可扩展：添加其他测试数据类型
   # orders:

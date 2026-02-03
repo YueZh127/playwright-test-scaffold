@@ -88,7 +88,17 @@ class BasePage(ABC):
         url = path if path.startswith("http") else f"{self.base_url}{path}"
         logger.info(f"导航到: {url}")
         
-        self.page.goto(url)
+        # 生产环境偶发会出现 net::ERR_CONNECTION_CLOSED；这里做一次轻量重试避免整套用例直接失败。
+        try:
+            self.page.goto(url, wait_until="domcontentloaded")
+        except Exception as e:
+            msg = str(e)
+            if "ERR_CONNECTION_CLOSED" in msg:
+                logger.warning(f"导航连接被关闭，重试一次: {url}")
+                self.page.wait_for_timeout(1000)
+                self.page.goto(url, wait_until="domcontentloaded")
+            else:
+                raise
         
         if wait_for_load:
             self.wait_for_page_load()
