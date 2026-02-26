@@ -1,0 +1,128 @@
+# TermsOfService API Test Add-on Rules (for Step1 test plan)
+
+> 本文档是 `ui-test-plan-generator.mdc` 的**附加规则**：用于在生成 Step1 测试计划时补充 TermsOfService 相关接口测试用例。  
+> 约束：**不修改**原规则文件；需要 TermsOfService 用例时，额外参考本文档即可。
+
+## 真理源（必须）
+
+- Swagger UI：`https://godgpt-app-management-test.godgpt.fun/swagger/index.html`
+- OpenAPI JSON（必须落盘为证据）：`GET <backend_base>/swagger/v1/swagger.json`
+
+## Step1 证据链落盘（必须）
+
+在 `docs/test-plans/artifacts/<slug>/` 追加以下证据文件：
+
+- `backend_swagger.json`
+  - 来源：`GET <backend_base>/swagger/v1/swagger.json`
+  - 用途：TermsOfService/TermsOfServiceAdmin endpoints + DTO 约束（required/minLength/maxLength/format）
+- （可选）`abp_app_config.json`
+  - 来源：`GET <frontend_base>/api/abp/application-configuration`
+  - 用途：补全 ABP 通用配置线索（如果能访问）
+
+## 接口清单（以 swagger.json 为准）
+
+### User/Client（TermsOfService）
+
+- `GET /api/godgpt/terms/consent/status`
+- `POST /api/godgpt/terms/consent`
+
+### Admin（TermsOfServiceAdmin）
+
+- `GET /api/admin/terms/versions`（过滤+分页）
+- `POST /api/admin/terms/versions`
+- `GET /api/admin/terms/versions/{id}`
+- `PUT /api/admin/terms/versions/{id}`
+- `DELETE /api/admin/terms/versions/{id}`
+- `POST /api/admin/terms/versions/{id}/activate`
+- `GET /api/admin/terms/versions/{version}/consent-count`
+
+## DTO 约束摘要（从 swagger.json 解析写入计划，用于 P1）
+
+> ABP 常见错误体：`Volo.Abp.Http.RemoteServiceErrorResponse`（400/401/403/404/500/501 等）。
+
+### SubmitConsentRequestDto（POST /api/godgpt/terms/consent）
+
+- `version`: required, string, minLength=1, maxLength=20
+- `contentHash`: required, string, minLength=1, maxLength=128
+- `platform`: required, string, minLength=1, maxLength=20
+- `osVersion`: optional, string, maxLength=20
+- `appVersion`: optional, string, maxLength=20
+
+### CreateTermsVersionDto（POST /api/admin/terms/versions）
+
+- `version`: required, string, minLength=1, maxLength=20
+- `contentHash`: required, string, minLength=1, maxLength=128
+- `contentUrl`: required, string, minLength=1, maxLength=512
+- `effectiveDate`: required, date-time
+- `storageVersionId`: optional, string, maxLength=128
+- `language`: optional, string, maxLength=10
+- `isActive`: boolean
+- `contentBackup`: optional, string
+
+### UpdateTermsVersionDto（PUT /api/admin/terms/versions/{id}）
+
+- `contentHash`: optional, string, maxLength=128
+- `contentUrl`: optional, string, maxLength=512
+- `storageVersionId`: optional, string, maxLength=128
+- `effectiveDate`: optional, date-time
+- `language`: optional, string, maxLength=10
+- `contentBackup`: optional, string
+
+### GET /api/admin/terms/versions（分页/过滤）
+
+- `SkipCount`: int32, min=0
+- `MaxResultCount`: int32, min=1
+- `VersionFilter` / `IsActiveFilter` / `LanguageFilter` / `Sorting`: optional
+
+## 用例设计（写入 Step1 测试计划：P0/P1/Security）
+
+### P0（核心功能）
+
+- **test_p0_terms_consent_status_requires_auth**
+  - 未登录调用 `GET /api/godgpt/terms/consent/status` → 期望 401（若实际为 403：以真实行为为准并记录）
+
+- **test_p0_terms_consent_status_schema_smoke**
+  - 登录后调用 status → 200
+  - 响应断言必须以 swagger.json 为准（例如字段 nullable、date-time 格式等）
+
+- **test_p0_submit_consent_success**
+  - 前置：存在可用条款版本（可通过 Admin 创建+activate，或使用环境已存在 active 版本）
+  - `POST /api/godgpt/terms/consent` → 200，返回 success=true（并包含 consentId/consentedAt 等）
+  - 再次查询 status → hasConsented=true（记录 currentVersion 是否一致）
+
+- **test_p0_admin_terms_versions_crud_happy_path**
+  - 创建：`POST /api/admin/terms/versions`
+  - 读取：`GET /api/admin/terms/versions/{id}`
+  - 更新：`PUT /api/admin/terms/versions/{id}`
+  - 激活：`POST /api/admin/terms/versions/{id}/activate`
+  - 查询：`GET /api/admin/terms/versions?IsActiveFilter=true`
+  - 清理：`DELETE /api/admin/terms/versions/{id}`
+    - 若“删除 active 版本”被禁止：记录业务策略，改为“创建非 active 并清理”，禁止硬改断言
+
+### P1（字段校验/边界）
+
+- **test_p1_submit_consent_required_fields**
+  - 缺 `version/contentHash/platform` 任一 → 400（RemoteServiceErrorResponse）
+
+- **test_p1_submit_consent_length_boundaries**
+  - version 长度 0/21、contentHash 0/129、platform 0/21 → 400
+
+- **test_p1_admin_create_terms_version_validation**
+  - version 0/21、contentHash 0/129、contentUrl 0/513、缺 effectiveDate → 400
+
+- **test_p1_admin_paging_params_validation**
+  - SkipCount=-1 或 MaxResultCount=0 → 400（若服务端实际接受：以真实行为为准并记录）
+
+### Security（最小集）
+
+- **test_security_admin_terms_endpoints_authz**
+  - 未登录访问 `/api/admin/terms/...` → 401
+  - 普通登录用户访问 `/api/admin/terms/...` → 403（若实际为 401：以真实行为为准并记录）
+
+## 计划输出要求（提醒）
+
+- 计划中必须明确：
+  - 接口真理源：swagger.json（已落盘）
+  - 哪些用例需要 admin 权限、哪些是普通登录用户
+  - 任何断言若与预期不符：以**真实响应**为准，并把差异记录到计划“已观察到的行为”小节
+
